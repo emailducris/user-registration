@@ -23,10 +23,9 @@ app.post("/register", (req, res) => {
     "INSERT INTO users ( login, name, nickname, date ) VALUES (?,?,?,?)";
 
   db.query(SQL, [login, name, nickname, date], (err, result) => {
-    console.log(err);
+    if (err) console.log(err);
+    else res.send(result);
   });
-
-  console.log(login);
 });
 
 app.get("/get", (req, res) => {
@@ -34,7 +33,24 @@ app.get("/get", (req, res) => {
 
   db.query(SQL, (err, result) => {
     if (err) console.log(err);
-    else res.send(result);
+    else {
+      result &&
+        result.map((r) => {
+          const dateYear = r.date.getFullYear();
+          const dateMonth = r.date.getMonth() + 1;
+          const dateDay = r.date.getDate();
+
+          r.date =
+            dateYear +
+            "-" +
+            dateMonth.toString().padStart(2, "0") +
+            "-" +
+            dateDay.toString().padStart(2, "0");
+        });
+
+      if (err) console.log(err);
+      else res.send(result);
+    }
   });
 });
 
@@ -62,6 +78,15 @@ app.delete("/delete/:id", (req, res) => {
     else res.send(result);
   });
 });
+
+// app.delete("/delete/:id", (req, res) => {
+//   const { id } = req.params;
+//   let SQL = "DELETE FROM users WHERE iduser = ?";
+//   db.query(SQL, [id], (err, result) => {
+//     if (err) console.log(err);
+//     else res.send(result);
+//   });
+// });
 
 app.listen(3001, () => {
   console.log("rodando servidor");

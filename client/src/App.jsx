@@ -15,10 +15,16 @@ import {
   Input,
   FormControl,
   InputGroup,
+  InputLeftElement,
+  InputRightAddon,
 } from "@chakra-ui/react";
+
+import { Search2Icon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import ModalComp from "./components/ModalComp";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -44,20 +50,39 @@ const App = () => {
     fetchData();
   }, [data, setData, dataEdit]);
 
-  const handleRemove = async (login) => {
+  // const handleRemove = async (login) => {
+  //   try {
+  //     const response = await axios.delete(
+  //       `http://localhost:3001/delete/${login}`
+  //     );
+
+  //     if (response.status === 200) {
+  //       const newArray = data.filter((item) => item.login !== login);
+  //       setData(newArray);
+  //       setFilteredDataCopy(newArray);
+  //       alert("Usuário excluido com sucesso!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Erro ao remover cliente:", error);
+  //   }
+  // };
+
+  const handleRemove = async (userId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3001/delete/${login}`
+        `http://localhost:3001/delete/${userId}`
       );
 
       if (response.status === 200) {
-        const newArray = data.filter((item) => item.login !== login);
+        const newArray = data.filter((item) => item.userId !== userId);
         setData(newArray);
         setFilteredDataCopy(newArray);
-        alert("Usuário excluido com sucesso!");
+        toast.success("Usuário deletado, com sucesso!");
+        toast.warning("Usuário deletado, com sucesso!");
       }
     } catch (error) {
-      console.error("Erro ao remover cliente:", error);
+      toast.error("Erro ao deletar usuário!");
+      console.error(error);
     }
   };
 
@@ -89,132 +114,147 @@ const App = () => {
   );
 
   return (
-    <Flex
-      h="100vh"
-      align="center"
-      justify="center"
-      fontSize="20px"
-      fontFamily="poppins"
-    >
-      <Box
-        padding={200}
-        maxW={1100}
-        w="100%"
-        py={10}
-        px={2}
-        boxShadow="2xl"
-        p="6"
-        rounded="md"
-        bg="white"
+    <>
+      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+      <Flex
+        h="100vh"
+        align="center"
+        justify="center"
+        fontSize="20px"
+        fontFamily="poppins"
       >
         <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mt="4"
+          padding={200}
+          maxW={1100}
+          w="100%"
+          py={10}
+          px={2}
+          boxShadow="2xl"
+          p="6"
+          rounded="md"
+          bg="white"
         >
-          <Button
-            padding={5}
-            marginStart={5}
-            fontSize={12}
-            colorScheme="blue"
-            onClick={() => [setDataEdit({}), onOpen()]}
-          >
-            NOVO CADASTRO
-          </Button>
-          <FormControl>
-            <Box>
-              <Input
-                maxWidth={300}
-                marginLeft={600}
-                type="text"
-                placeholder={"Pesquisar usuário"}
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-            </Box>
-          </FormControl>
-        </Box>
-        <Spacer />
-        <Box overflowY="auto" height="100%">
-          <Table mt="6">
-            <Thead>
-              <Tr>
-                <Th ps={10} fontSize="20px">
-                  Login
-                </Th>
-                <Th fontSize="20px">Nome</Th>
-                <Th fontSize="20px">Apelido</Th>
-                <Th fontSize="20px">Data</Th>
-                <Th p={0}></Th>
-                <Th p={0}></Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {currentItems.map((user) => (
-                <Tr ps={10} key={user.iduser}>
-                  <Td ps={10}>{user.login}</Td>
-                  <Td>{user.name}</Td>
-                  <Td>{user.nickname}</Td>
-                  <Td>{user.date}</Td>
-                  <Td p={0}></Td>
-                  <Td p={0}></Td>
-                  <Td pe={1}>
-                    <EditIcon
-                      onClick={() => handleOnClick(user.iduser)}
-                      cursor="pointer"
-                    />
-                  </Td>
-                  <Td pe={6}>
-                    <DeleteIcon
-                      onClick={() => handleRemove(user.login)}
-                      cursor="pointer"
-                    />
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
           <Box
             display="flex"
             justifyContent="space-between"
             alignItems="center"
             mt="4"
-            me={10}
-            ms={10}
           >
-            {currentPage > 1 && (
-              <Button
-                colorScheme="blue"
-                onClick={() => setCurrentPage(currentPage - 1)}
-              >
-                Anterior
-              </Button>
-            )}
-            <Text>{currentPage}</Text>
-            {currentPage < totalPages && (
-              <Button
-                colorScheme="blue"
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
-                Próxima
-              </Button>
-            )}
+            <Button
+              padding={5}
+              marginStart={5}
+              fontSize={12}
+              colorScheme="blue"
+              onClick={() => [setDataEdit({}), onOpen()]}
+            >
+              NOVO CADASTRO
+            </Button>
+            <FormControl>
+              <Box>
+                <InputGroup>
+                  <Input
+                    maxWidth={300}
+                    marginLeft={600}
+                    type="text"
+                    placeholder={"Pesquisar usuário"}
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                </InputGroup>
+              </Box>
+            </FormControl>
+          </Box>
+          <Spacer />
+          <Box overflowY="auto" height="100%">
+            <Table mt="6">
+              <Thead>
+                <Tr>
+                  <Th ps={10} fontSize="20px">
+                    Login
+                  </Th>
+                  <Th fontSize="20px">Nome</Th>
+                  <Th fontSize="20px">Apelido</Th>
+                  <Th fontSize="20px">Data</Th>
+                  <Th p={0}></Th>
+                  <Th p={0}></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {currentItems.map((user) => (
+                  <Tr ps={10} key={user.iduser} _hover={{ bg: "gray.100" }}>
+                    <Td ps={10}>{user.login}</Td>
+                    <Td>{user.name}</Td>
+                    <Td>{user.nickname}</Td>
+                    {/* Cria um novo objeto de data, passa para string e extrai os primeiros 10 digitos  */}
+                    <Td>{new Date(user.date).toISOString().slice(0, 10)}</Td>
+                    <Td p={0}></Td>
+                    <Td p={0}></Td>
+                    <Td pe={1}>
+                      <EditIcon
+                        onClick={() => handleOnClick(user.iduser)}
+                        cursor="pointer"
+                        title="Clique aqui para editar o usuário"
+                        _hover={{ color: "blue.500" }}
+                      />
+                    </Td>
+                    <Td pe={6}>
+                      <DeleteIcon
+                        onClick={() => handleRemove(user.login)}
+                        cursor="pointer"
+                        title="Clique aqui para deletar o usuário"
+                        _hover={{ color: "red.500" }}
+                      />
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              mt="4"
+              me={10}
+              ms={10}
+            >
+              {currentPage > 1 && (
+                <Button
+                  size="sm"
+                  colorScheme="blue"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                >
+                  Anterior
+                </Button>
+              )}
+              <Text>{currentPage}</Text>
+              {currentPage < totalPages && (
+                <Button
+                  size="sm"
+                  colorScheme="blue"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  Próxima
+                </Button>
+              )}
+            </Box>
           </Box>
         </Box>
-      </Box>
-      {isOpen && (
-        <ModalComp
-          isOpen={isOpen}
-          onClose={onClose}
-          data={data}
-          setData={setData}
-          dataEdit={dataEdit}
-          setDataEdit={setDataEdit}
-        />
-      )}
-    </Flex>
+        {isOpen && (
+          <ModalComp
+            isOpen={isOpen}
+            onClose={onClose}
+            data={data}
+            setData={setData}
+            dataEdit={dataEdit}
+            setDataEdit={setDataEdit}
+          />
+        )}
+      </Flex>
+    </>
   );
 };
 
 export default App;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////aqui////////////////////////////////////////

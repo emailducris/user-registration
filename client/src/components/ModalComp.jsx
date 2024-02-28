@@ -11,13 +11,11 @@ import {
   FormLabel,
   Input,
   Box,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //Recebe as propriedades:
 //data(mostra os dados na tela), setData (atualiza os dados)
@@ -42,27 +40,38 @@ const ModalComp = ({ data, setData, dataEdit, isOpen, onClose }) => {
           date,
         })
         .then((response) => {
+          toast.success("Usuário editado, com sucesso!");
           console.log(response);
-          alert("Editado com sucesso");
           onClose();
         })
         .catch((error) => {
+          toast.error("Erro ao editar usuário!");
           console.error(error);
         });
     } else {
       axios
         .post("http://localhost:3001/register", { name, login, nickname, date })
+
         .then((response) => {
+          toast.success("Usuário cadastrado, com sucesso!", {
+            theme: "dark",
+          });
           console.log(response);
           onClose();
         })
         .catch((error) => {
+          toast.error("Erro ao cadastrar usuário!", {
+            autoClose: 3000,
+            theme: "dark",
+          });
           console.error(error);
         });
     }
-
-    onClose();
   };
+
+  // const handleDateChange = function (e) {
+  //   console.log(e.target.value);
+  // };
 
   return (
     <>
@@ -79,6 +88,7 @@ const ModalComp = ({ data, setData, dataEdit, isOpen, onClose }) => {
                   type="text"
                   value={login}
                   onChange={(e) => setLogin(e.target.value)}
+                  required
                 />
               </Box>
               <Box>
@@ -87,6 +97,7 @@ const ModalComp = ({ data, setData, dataEdit, isOpen, onClose }) => {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  required
                 />
               </Box>
               <Box>
@@ -95,14 +106,17 @@ const ModalComp = ({ data, setData, dataEdit, isOpen, onClose }) => {
                   type="text"
                   value={nickname}
                   onChange={(e) => setNickname(e.target.value)}
+                  required
                 />
               </Box>
               <Box>
                 <FormLabel>Data</FormLabel>
                 <Input
-                  type="text"
+                  type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
+                  required
+                  // onChange={handleDateChange}
                 />
               </Box>
             </FormControl>
