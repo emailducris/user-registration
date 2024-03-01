@@ -25,6 +25,7 @@ import ModalComp from "./components/ModalComp";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PaginationComp from "./components/PaginationComp";
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -32,9 +33,9 @@ const App = () => {
   const [dataEdit, setDataEdit] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredDataCopy, setFilteredDataCopy] = useState(data);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-  const totalPages = Math.ceil(filteredDataCopy.length / itemsPerPage);
+  const [currentPage, setCurrentPage] = useState(0); //Pagina corrente, inicia na pagina 01
+  const [itemsPerPage] = useState(10); //Itens por página
+  const totalPages = Math.ceil(filteredDataCopy.length / itemsPerPage); // Logica do total de paginas. Math.ceil() função pra não dar numero quebrado.
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,6 +50,26 @@ const App = () => {
 
     fetchData();
   }, [data, setData, dataEdit]);
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+
+    // const filteredData = data.filter((user) =>
+    //   user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    // );
+
+    setFilteredDataCopy(filteredData);
+    setCurrentPage(1);
+  };
+  //Verificar essa função que está duplicada
+  const filteredData = filteredDataCopy.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Fatiar o array de itens
+  const startIndex = currentPage * itemsPerPage; // 10(si) = 1(cp) * 10(ipp)
+  const endIndex = startIndex + itemsPerPage; //20(ei) = 10(si) + 10(ipp)
+  const currentItems = filteredData.slice(startIndex, endIndex);
 
   // const handleRemove = async (login) => {
   //   try {
@@ -92,26 +113,6 @@ const App = () => {
     setDataEdit(editUser[0]);
     onOpen();
   };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-
-    const filteredData = data.filter((user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    setFilteredDataCopy(filteredData);
-    setCurrentPage(1);
-  };
-
-  const filteredData = filteredDataCopy.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const currentItems = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   return (
     <>
@@ -209,34 +210,11 @@ const App = () => {
                 ))}
               </Tbody>
             </Table>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              mt="4"
-              me={10}
-              ms={10}
-            >
-              {currentPage > 1 && (
-                <Button
-                  size="sm"
-                  colorScheme="blue"
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                >
-                  Anterior
-                </Button>
-              )}
-              <Text>{currentPage}</Text>
-              {currentPage < totalPages && (
-                <Button
-                  size="sm"
-                  colorScheme="blue"
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                >
-                  Próxima
-                </Button>
-              )}
-            </Box>
+            <PaginationComp
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
+            />
           </Box>
         </Box>
         {isOpen && (
