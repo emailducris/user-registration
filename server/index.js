@@ -72,7 +72,7 @@ app.put("/edit/:id", (req, res) => {
 
 app.delete("/delete/:id", (req, res) => {
   const { id } = req.params;
-  let SQL = "DELETE FROM users WHERE login = ?";
+  let SQL = "DELETE FROM users WHERE iduser = ?";
   db.query(SQL, [id], (err, result) => {
     if (err) console.log(err);
     else res.send(result);

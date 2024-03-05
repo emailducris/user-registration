@@ -200,7 +200,7 @@ const App = () => {
                     </Td>
                     <Td pe={6}>
                       <DeleteIcon
-                        onClick={() => handleRemove(user.login)}
+                        onClick={() => handleRemove(user.iduser)}
                         cursor="pointer"
                         title="Clique aqui para deletar o usuário"
                         _hover={{ color: "red.500" }}
