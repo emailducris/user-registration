@@ -26,6 +26,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PaginationComp from "./components/PaginationComp";
+import PaginationCompSetas from "./components/PaginationCompSetas";
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -210,7 +211,12 @@ const App = () => {
                 ))}
               </Tbody>
             </Table>
-            <PaginationComp
+            {/* <PaginationComp
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
+            /> */}
+            <PaginationCompSetas
               currentPage={currentPage}
               totalPages={totalPages}
               setCurrentPage={setCurrentPage}
