@@ -67,10 +67,10 @@ const App = () => {
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Fatiar o array de itens
-  const startIndex = currentPage * itemsPerPage; // 10(si) = 1(cp) * 10(ipp)
+  const startIndex = (currentPage - 1) * itemsPerPage; // 10(si) = 1(cp) * 10(ipp)
   const endIndex = startIndex + itemsPerPage; //20(ei) = 10(si) + 10(ipp)
-  const currentItems = filteredData.slice(startIndex, endIndex);
+  const currentItems = filteredData.slice(startIndex, endIndex); //(10)ci = 10(si), 20(ei)
+  //Cria um novo array, para ser renderizado na tela na tabela
 
   // const handleRemove = async (login) => {
   //   try {
