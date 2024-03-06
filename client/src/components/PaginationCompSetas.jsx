@@ -1,12 +1,12 @@
 import React from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, IconButton } from "@chakra-ui/react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 
 const PaginationCompSetas = ({ totalPages, currentPage, setCurrentPage }) => {
-  const disabledStyle = {
-    pointerEvents: "none",
-    color: "gray.200",
-  };
+  // const disabledStyle = {
+  //   pointerEvents: "none",
+  //   color: "gray.200",
+  // };
   return (
     <Box
       display="flex"
@@ -19,12 +19,14 @@ const PaginationCompSetas = ({ totalPages, currentPage, setCurrentPage }) => {
     >
       {currentPage > 1 && (
         <ArrowLeftIcon
+          // as={ArrowLeftIcon}
           cursor="pointer"
           title="Anterior"
           _hover={{ color: "blue.500" }}
-          style={currentPage === 1 ? disabledStyle : {}}
+          // style={currentPage === 1 ? disabledStyle : {}}
+          isDisabled={currentPage === 1}
           onClick={() => setCurrentPage(currentPage - 1)}
-          //   disabled={currentPage === 1}
+          // isDisabled={currentPage === 1}
         />
       )}
       <Text>
@@ -37,7 +39,7 @@ const PaginationCompSetas = ({ totalPages, currentPage, setCurrentPage }) => {
           title="Próxima"
           _hover={{ color: "blue.500" }}
           onClick={() => setCurrentPage(currentPage + 1)}
-          style={currentPage === totalPages ? disabledStyle : {}}
+          // style={currentPage === totalPages ? disabledStyle : {}}
           //   opacity={currentPage === totalPages ? 0.5 : 1}
           //   disabled={currentPage === totalPages}
         />

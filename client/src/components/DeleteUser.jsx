@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { DeleteIcon } from "@chakra-ui/icons";
+import { Tooltip } from "@chakra-ui/react";
 
 const DeleteUser = ({ iduser, onDelete }) => {
   const handleRemove = async () => {
@@ -21,12 +22,14 @@ const DeleteUser = ({ iduser, onDelete }) => {
   };
 
   return (
-    <DeleteIcon
-      onClick={() => handleRemove()}
-      cursor="pointer"
-      title="Clique aqui para deletar o usuário"
-      _hover={{ color: "red.500" }}
-    />
+    <Tooltip label="Clique aqui para excluir">
+      <DeleteIcon
+        onClick={() => handleRemove()}
+        cursor="pointer"
+        title="Clique aqui para deletar o usuário"
+        _hover={{ color: "red.500" }}
+      />
+    </Tooltip>
   );
 };
 
