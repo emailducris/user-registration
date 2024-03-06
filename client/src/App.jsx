@@ -14,6 +14,7 @@ import {
   Spacer,
   Input,
   FormControl,
+  Icon,
   InputGroup,
   InputLeftElement,
   InputRightAddon,
@@ -126,6 +127,18 @@ const App = () => {
                     placeholder={"Pesquisar usuário"}
                     value={searchTerm}
                     onChange={handleSearch}
+                    borderRadius="md"
+                    paddingLeft="42px"
+                  />
+                  <Icon
+                    maxWidth={300}
+                    marginLeft={600}
+                    as={SearchIcon}
+                    position="absolute"
+                    top="50%"
+                    transform="translateY(-50%)"
+                    left="12px"
+                    color="gray.400"
                   />
                 </InputGroup>
               </Box>

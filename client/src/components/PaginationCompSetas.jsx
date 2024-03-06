@@ -15,7 +15,7 @@ const PaginationCompSetas = ({ totalPages, currentPage, setCurrentPage }) => {
       alignItems="center"
       mt="10"
       gap={20}
-      color={"gray.600"}
+      color={"gray.500"}
     >
       {currentPage > 1 && (
         <ArrowLeftIcon
