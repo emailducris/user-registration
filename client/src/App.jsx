@@ -19,7 +19,6 @@ import {
   InputRightAddon,
 } from "@chakra-ui/react";
 
-import { Search2Icon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import ModalComp from "./components/ModalComp";
 import axios from "axios";
@@ -27,6 +26,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PaginationComp from "./components/PaginationComp";
 import PaginationCompSetas from "./components/PaginationCompSetas";
+// import HandleRemoveComp from "./components/HandleRemoveComp";
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,7 +34,7 @@ const App = () => {
   const [dataEdit, setDataEdit] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredDataCopy, setFilteredDataCopy] = useState(data);
-  const [currentPage, setCurrentPage] = useState(0); //Pagina corrente, inicia na pagina 01
+  const [currentPage, setCurrentPage] = useState(1); //Pagina corrente, inicia na pagina 01
   const [itemsPerPage] = useState(10); //Itens por página
   const totalPages = Math.ceil(filteredDataCopy.length / itemsPerPage); // Logica do total de paginas. Math.ceil() função pra não dar numero quebrado.
 
@@ -54,15 +54,10 @@ const App = () => {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-
-    // const filteredData = data.filter((user) =>
-    //   user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
-
     setFilteredDataCopy(filteredData);
     setCurrentPage(1);
   };
-  //Verificar essa função que está duplicada
+
   const filteredData = filteredDataCopy.filter((user) =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -72,31 +67,14 @@ const App = () => {
   const currentItems = filteredData.slice(startIndex, endIndex); //(10)ci = 10(si), 20(ei)
   //Cria um novo array, para ser renderizado na tela na tabela
 
-  // const handleRemove = async (login) => {
-  //   try {
-  //     const response = await axios.delete(
-  //       `http://localhost:3001/delete/${login}`
-  //     );
-
-  //     if (response.status === 200) {
-  //       const newArray = data.filter((item) => item.login !== login);
-  //       setData(newArray);
-  //       setFilteredDataCopy(newArray);
-  //       alert("Usuário excluido com sucesso!");
-  //     }
-  //   } catch (error) {
-  //     console.error("Erro ao remover cliente:", error);
-  //   }
-  // };
-
-  const handleRemove = async (userId) => {
+  const handleRemove = async (iduser) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3001/delete/${userId}`
+        `http://localhost:3001/delete/${iduser}`
       );
 
       if (response.status === 200) {
-        const newArray = data.filter((item) => item.userId !== userId);
+        const newArray = data.filter((item) => item.iduser !== iduser);
         setData(newArray);
         setFilteredDataCopy(newArray);
         toast.success("Usuário deletado, com sucesso!");
@@ -107,11 +85,14 @@ const App = () => {
       console.error(error);
     }
   };
-
+  ////////////////////////////
+  //Função recebe o parâmetro iduser,
+  //O metodo filter procura o objeto (com iduser) no array data
+  //O filter retorna um novo array com o usuario
   const handleOnClick = (iduser) => {
     const editUser = data.filter((d) => d.iduser === iduser);
 
-    setDataEdit(editUser[0]);
+    setDataEdit(editUser[0]); //É atribuido ao primeiro elemento do array editUser
     onOpen();
   };
 
@@ -189,9 +170,9 @@ const App = () => {
                     <Td>{user.nickname}</Td>
                     {/* Cria um novo objeto de data, passa para string e extrai os primeiros 10 digitos  */}
                     <Td>{new Date(user.date).toISOString().slice(0, 10)}</Td>
-                    <Td p={0}></Td>
-                    <Td p={0}></Td>
-                    <Td pe={1}>
+                    {/* <Td p={0}></Td>
+                    <Td p={0}></Td> */}
+                    <Td pe={0.01}>
                       <EditIcon
                         onClick={() => handleOnClick(user.iduser)}
                         cursor="pointer"
@@ -199,6 +180,11 @@ const App = () => {
                         _hover={{ color: "blue.500" }}
                       />
                     </Td>
+                    {/* <HandleRemoveComp
+                      user={user.iduser}
+                      // onSuccess={onSuccess}
+                      // onError={onError}
+                    /> */}
                     <Td pe={6}>
                       <DeleteIcon
                         onClick={() => handleRemove(user.iduser)}
@@ -239,11 +225,3 @@ const App = () => {
 };
 
 export default App;
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////aqui////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-/////////////////////aqui//////////////////////////////////////////////
