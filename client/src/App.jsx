@@ -26,7 +26,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PaginationComp from "./components/PaginationComp";
 import PaginationCompSetas from "./components/PaginationCompSetas";
-// import HandleRemoveComp from "./components/HandleRemoveComp";
+import DeleteUser from "./components/DeleteUser";
 
 const App = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -52,6 +52,13 @@ const App = () => {
     fetchData();
   }, [data, setData, dataEdit]);
 
+  const handleOnClick = (iduser) => {
+    const editUser = data.filter((d) => d.iduser === iduser);
+
+    setDataEdit(editUser[0]); //É atribuido ao primeiro elemento do array editUser
+    onOpen();
+  };
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     setFilteredDataCopy(filteredData);
@@ -67,33 +74,10 @@ const App = () => {
   const currentItems = filteredData.slice(startIndex, endIndex); //(10)ci = 10(si), 20(ei)
   //Cria um novo array, para ser renderizado na tela na tabela
 
-  const handleRemove = async (iduser) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:3001/delete/${iduser}`
-      );
-
-      if (response.status === 200) {
-        const newArray = data.filter((item) => item.iduser !== iduser);
-        setData(newArray);
-        setFilteredDataCopy(newArray);
-        toast.success("Usuário deletado, com sucesso!");
-        toast.warning("Usuário deletado, com sucesso!");
-      }
-    } catch (error) {
-      toast.error("Erro ao deletar usuário!");
-      console.error(error);
-    }
-  };
-  ////////////////////////////
-  //Função recebe o parâmetro iduser,
-  //O metodo filter procura o objeto (com iduser) no array data
-  //O filter retorna um novo array com o usuario
-  const handleOnClick = (iduser) => {
-    const editUser = data.filter((d) => d.iduser === iduser);
-
-    setDataEdit(editUser[0]); //É atribuido ao primeiro elemento do array editUser
-    onOpen();
+  const handleDelete = (iduser) => {
+    const newArray = data.filter((item) => item.iduser !== iduser);
+    setData(newArray);
+    setFilteredDataCopy(newArray);
   };
 
   return (
@@ -158,8 +142,8 @@ const App = () => {
                   <Th fontSize="20px">Nome</Th>
                   <Th fontSize="20px">Apelido</Th>
                   <Th fontSize="20px">Data</Th>
-                  <Th p={0}></Th>
-                  <Th p={0}></Th>
+                  <Th></Th>
+                  <Th></Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -180,28 +164,16 @@ const App = () => {
                         _hover={{ color: "blue.500" }}
                       />
                     </Td>
-                    {/* <HandleRemoveComp
-                      user={user.iduser}
-                      // onSuccess={onSuccess}
-                      // onError={onError}
-                    /> */}
-                    <Td pe={6}>
-                      <DeleteIcon
-                        onClick={() => handleRemove(user.iduser)}
-                        cursor="pointer"
-                        title="Clique aqui para deletar o usuário"
-                        _hover={{ color: "red.500" }}
+                    <Td pe={2}>
+                      <DeleteUser
+                        iduser={user.iduser}
+                        onDelete={handleDelete}
                       />
                     </Td>
                   </Tr>
                 ))}
               </Tbody>
             </Table>
-            {/* <PaginationComp
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-            /> */}
             <PaginationCompSetas
               currentPage={currentPage}
               totalPages={totalPages}

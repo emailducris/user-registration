@@ -75,18 +75,9 @@ app.delete("/delete/:id", (req, res) => {
   let SQL = "DELETE FROM users WHERE iduser = ?";
   db.query(SQL, [id], (err, result) => {
     if (err) console.log(err);
-    else res.send(result) + console.log("usuario deletado" + result);
+    else res.send(result);
   });
 });
-
-// app.delete("/delete/:id", (req, res) => {
-//   const { id } = req.params;
-//   let SQL = "DELETE FROM users WHERE iduser = ?";
-//   db.query(SQL, [id], (err, result) => {
-//     if (err) console.log(err);
-//     else res.send(result);
-//   });
-// });
 
 app.listen(3001, () => {
   console.log("rodando servidor");
