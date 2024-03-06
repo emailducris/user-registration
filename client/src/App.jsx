@@ -16,8 +16,7 @@ import {
   FormControl,
   Icon,
   InputGroup,
-  InputLeftElement,
-  InputRightAddon,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import { useEffect, useState } from "react";
@@ -53,10 +52,13 @@ const App = () => {
     fetchData();
   }, [data, setData, dataEdit]);
 
+  //Função recebe o parâmetro iduser,
+  //Filtra o array data para encontrar o usuário com o iduser
+  //O filter retorna um novo array com o usuario
   const handleOnClick = (iduser) => {
     const editUser = data.filter((d) => d.iduser === iduser);
 
-    setDataEdit(editUser[0]); //É atribuido ao primeiro elemento do array editUser
+    setDataEdit(editUser[0]); //É atribuido como elemento inicial do array editUser
     onOpen();
   };
 
@@ -89,14 +91,23 @@ const App = () => {
         align="center"
         justify="center"
         fontSize="20px"
-        fontFamily="poppins"
+        // fontFamily="poppins"
+        font-family="poppins"
+        // fontFamily="poppins, sans-serif"
+        // fontFamily="Roboto, sans-serif"
+        // fontFamily="Open Sans, sans-serif"
+        // fontFamily="Lato"
+        // fontFamily="Lato, sans-serif"
+        // fontFamily="Noto Sans Khojki"
+        // font-family="Noto Sans HK"
+        // font-family="Oswald"
       >
         <Box
           padding={200}
           maxW={1100}
           w="100%"
           py={10}
-          px={2}
+          px={3}
           boxShadow="2xl"
           p="6"
           rounded="md"
@@ -109,9 +120,10 @@ const App = () => {
             mt="4"
           >
             <Button
-              padding={5}
-              marginStart={5}
-              fontSize={12}
+              padding={6}
+              marginStart={8}
+              // fontSize={14}
+              size="sm"
               colorScheme="blue"
               onClick={() => [setDataEdit({}), onOpen()]}
             >
@@ -119,10 +131,10 @@ const App = () => {
             </Button>
             <FormControl>
               <Box>
-                <InputGroup>
+                <InputGroup pr={5}>
                   <Input
                     maxWidth={300}
-                    marginLeft={600}
+                    marginLeft={595}
                     type="text"
                     placeholder={"Pesquisar usuário"}
                     value={searchTerm}
@@ -132,7 +144,7 @@ const App = () => {
                   />
                   <Icon
                     maxWidth={300}
-                    marginLeft={600}
+                    marginLeft={595}
                     as={SearchIcon}
                     position="absolute"
                     top="50%"
@@ -149,39 +161,50 @@ const App = () => {
             <Table mt="6">
               <Thead>
                 <Tr>
-                  <Th ps={10} fontSize="20px">
+                  <Th ps={10} fontSize="21px">
                     Login
                   </Th>
-                  <Th fontSize="20px">Nome</Th>
+                  {/* <Th fontSize="20px">Nome</Th>
                   <Th fontSize="20px">Apelido</Th>
-                  <Th fontSize="20px">Data</Th>
+                  <Th fontSize="20px">Data</Th> */}
+                  <Th fontSize="21px">Nome</Th>
+                  <Th fontSize="21px">Apelido</Th>
+                  <Th fontSize="21px">Data</Th>
                   <Th></Th>
                   <Th></Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {currentItems.map((user) => (
-                  <Tr ps={10} key={user.iduser} _hover={{ bg: "gray.100" }}>
+                  <Tr
+                    fontSize="18px"
+                    ps={10}
+                    key={user.iduser}
+                    _hover={{ bg: "gray.100" }}
+                  >
                     <Td ps={10}>{user.login}</Td>
-                    <Td>{user.name}</Td>
+                    <Td fontSize="18px">{user.name}</Td>
                     <Td>{user.nickname}</Td>
                     {/* Cria um novo objeto de data, passa para string e extrai os primeiros 10 digitos  */}
                     <Td>{new Date(user.date).toISOString().slice(0, 10)}</Td>
                     {/* <Td p={0}></Td>
                     <Td p={0}></Td> */}
-                    <Td pe={0.01}>
-                      <EditIcon
-                        onClick={() => handleOnClick(user.iduser)}
-                        cursor="pointer"
-                        title="Clique aqui para editar o usuário"
-                        _hover={{ color: "blue.500" }}
-                      />
+                    <Td pe={1}>
+                      <Tooltip label="Clique aqui para editar">
+                        <EditIcon
+                          onClick={() => handleOnClick(user.iduser)}
+                          cursor="pointer"
+                          _hover={{ color: "blue.500" }}
+                        />
+                      </Tooltip>
                     </Td>
                     <Td pe={2}>
-                      <DeleteUser
-                        iduser={user.iduser}
-                        onDelete={handleDelete}
-                      />
+                      <Tooltip label="Clique aqui para excluir">
+                        <DeleteUser
+                          iduser={user.iduser}
+                          onDelete={handleDelete}
+                        />
+                      </Tooltip>
                     </Td>
                   </Tr>
                 ))}
